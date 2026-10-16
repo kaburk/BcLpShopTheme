@@ -5,6 +5,7 @@
  * - SP メニューの開閉
  * - セクション見出しの英字ラベル（ブロックの ID から生成）
  * - メニューの価格の単位（円）を小さくする
+ * - メールフォームの確認画面で、チェックボックスの値を表示する
  * - メールフォームの送信モード設定（BcMail の form-submit.js の代わり）
  */
 (function () {
@@ -44,6 +45,16 @@
 		var unit = document.createElement('small');
 		unit.textContent = m[2];
 		p.appendChild(unit);
+	});
+
+	// メールフォームの確認画面：チェックボックスの値は hidden でしか出ないので、文字として表示する
+	document.querySelectorAll('.sh-form.is-confirm span[id^="FieldMessage"]').forEach(function (span) {
+		if (span.textContent.trim()) { return; }
+		var values = [];
+		span.querySelectorAll('input[type="hidden"][name$="[]"]').forEach(function (input) {
+			if (input.value) { values.push(input.value); }
+		});
+		if (values.length) { span.appendChild(document.createTextNode(values.join('、'))); }
 	});
 
 	// メールフォーム：押したボタンに応じて mode を設定（Confirm / Back / Submit）
