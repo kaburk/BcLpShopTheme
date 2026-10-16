@@ -1,0 +1,12 @@
+{
+    "name": "kaburk/bc-lp-shop-theme",
+    "description": "Shop and cafe landing page theme for baserCMS5",
+    "homepage": "https://blog.kaburk.com/",
+    "type": "cakephp-plugin",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "BcLpShopTheme\\": "src/"
+        }
+    }
+}

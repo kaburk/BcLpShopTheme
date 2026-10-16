@@ -1,0 +1,360 @@
+@charset "UTF-8";
+/* ==========================================================================
+   BcLpShopTheme : baserCMS5 店舗 LP テーマ
+
+   本文（BurgerEditor）のスタイル
+   公開画面と BurgerEditor の編集エリアの両方で読み込まれる（style.css は編集エリアでは読まれない）
+
+   ■ 独自class一覧（ブロック設定の「独自class設定」に入力する）
+   | 独自class          | 使うブロック                       | 中身の書き方
+   |--------------------|------------------------------------|---------------------------------------------
+   | sh-blk--hero       | 画像右寄せ（テキスト回り込み無し） | テキスト：段落（英字の店名）→ 見出し1（店名）→ 段落（キャッチ）→ 段落（紹介文）
+   |                    |                                    | → 段落（営業時間のひとこと）→ 最後の段落にリンク（1つめ＝予約ボタン、2つめ＝白いボタン）
+   |                    |                                    | 画像を空にすると、円と線の図形が表示される
+   | sh-blk--section    | 大見出し                           | セクションの見出し。「ID設定」に英字（例 menu）を入れると、ヘッダーのナビに載り、
+   |                    |                                    | 見出しの上に英字のラベル（MENU）が出る。「-and-」は「 & 」になる（hours-and-access → HOURS & ACCESS）
+   | sh-blk--nonav      | 大見出し（sh-blk--section と併用） | ID を入れても、ヘッダーのナビには載せない（英字のラベルだけ出す）
+   | sh-blk--center     | 大見出し（sh-blk--section と併用） | 見出しを中央寄せにする（右へ伸びる罫線は出さない）
+   | sh-blk--points     | 画像3列＋テキスト                  | テキスト：見出し3 → 段落。「POINT 01」は自動
+   | sh-blk--menu       | 画像3列＋テキスト                  | テキスト：見出し3（品名）→ 段落（説明）→ 最後の段落（価格。例 550円）
+   | sh-blk--side       | 1カラムテキスト                    | 見出し3 → 段落。直後に sh-blk--price を置くと、PC では左の列になる
+   | sh-blk--price      | 2カラムテーブル                    | 見出し欄＝品名、内容欄＝価格（右寄せ）
+   | sh-blk--gallery    | 画像3列                            | 写真を3枚並べる（店内の様子など）
+   | sh-blk--narrow     | 1カラムテキスト                    | 本文の幅を狭くする（読みやすい長さにする）
+   | sh-blk--news       | 1カラムテキスト                    | 段落に [Lp.news] と書くと、ブログ「お知らせ」（news）の最新3件が並ぶ
+   |                    |                                    | ブログ名と件数を変えるときは [Lp.news ブログ名,件数]（例 [Lp.news news,5]）
+   |                    |                                    | 記事は管理画面のブログ「お知らせ」で書く（記事の一覧・詳細ページもできる）
+   | sh-blk--map        | GoogleMaps                         | 地図でお店の位置を指定する。サイト基本設定に Google Maps API キーが必要
+   |                    |                                    | 直後に sh-blk--info を置くと、PC では地図が左・店舗情報が右の2列になる
+   | sh-blk--info       | 2カラムテーブル                    | 見出し欄＝項目名（住所・電話など）、内容欄＝内容
+   | sh-blk--faq        | 1カラムテキスト                    | 見出し3＝質問、直後の段落＝回答
+   | sh-blk--cta        | 1カラムテキスト                    | 段落（リード）→ 段落にリンク（予約ボタン）→ 見出し3（電話の見出し）
+   |                    |                                    | → 段落にリンク（電話番号。リンク先は tel:）→ 段落（受付時間）。PC ではボタンと電話の枠が横に並ぶ
+   | sh-blk--center     | 任意                               | 中央寄せ
+
+   ■ ブロック設定の「背景色」（テーマ色に置き換えている）
+   - ブルー：メイン色の薄い背景／グレー：サブ色の薄い背景／ピンク：サブ色の濃い背景
+   - 同じ背景色のブロックを続けると、1つのセクションとしてつながって見える
+
+   ■ 複数の場所に書かれている値を変えるとき
+   - 営業時間・定休日：ヒーロー／店舗情報（sh-blk--info）／予約の CTA（sh-blk--cta）／フッター（ウィジェット）／メールフィールド「ご希望の日付」「ご希望の時間」
+   - 電話番号・住所：店舗情報／予約の CTA／フッター／メールフォームの送信完了メッセージ
+   - 店名：ヒーロー／フッター／メールフォームの差出人名・件名／テーマ設定のロゴの代替テキスト
+   ========================================================================== */
+
+/* ---- Tokens（style.css と同じ値。編集エリア用に再定義） ---- */
+:root {
+	--sh-main: var(--theme-main, #8a5a3b);
+	--sh-sub: var(--theme-sub, #2e3a2f);
+	--sh-link: var(--theme-link, #8a5a3b);
+	--sh-hover: var(--theme-hover, #6b4329);
+	--sh-main-05: color-mix(in srgb, var(--sh-main) 6%, #fff);
+	--sh-main-10: color-mix(in srgb, var(--sh-main) 12%, #fff);
+	--sh-main-25: color-mix(in srgb, var(--sh-main) 26%, #fff);
+	--sh-main-dark: color-mix(in srgb, var(--sh-main) 82%, #000);
+	--sh-sub-05: color-mix(in srgb, var(--sh-sub) 5%, #fff);
+	--sh-line: color-mix(in srgb, var(--sh-sub) 18%, #fff);
+	--sh-main-ink: color-mix(in srgb, var(--sh-main) 80%, #000);
+	--sh-sub-ink: var(--sh-sub);
+	--sh-link-ink: color-mix(in srgb, var(--sh-link) 80%, #000);
+	--sh-hover-ink: color-mix(in srgb, var(--sh-hover) 80%, #000);
+	--sh-on-main: #fff;
+	--sh-on-sub: #fff;
+	--sh-text: #262626;
+	--sh-muted: #555;
+	--sh-font: "Noto Sans JP", system-ui, sans-serif;
+	--sh-font-serif: "Shippori Mincho", "Noto Serif JP", serif;
+
+	/* アイコン（mask-image 用） */
+	--sh-ic-clock: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.6' stroke-linecap='round'%3E%3Ccircle cx='12' cy='12' r='9'/%3E%3Cpath d='M12 7v5l3 2'/%3E%3C/svg%3E");
+	--sh-ic-phone: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.6' stroke-linejoin='round'%3E%3Cpath d='M5 3h4l2 5-2.5 1.5a11 11 0 0 0 6 6L16 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 5a2 2 0 0 1 2-2z'/%3E%3C/svg%3E");
+}
+@supports (color: oklch(from red l c h)) {
+	:root {
+		--sh-main-ink: oklch(from var(--sh-main) min(l, 0.52) c h);
+		--sh-sub-ink: oklch(from var(--sh-sub) min(l, 0.40) c h);
+		--sh-link-ink: oklch(from var(--sh-link) min(l, 0.52) c h);
+		--sh-hover-ink: oklch(from var(--sh-hover) min(l, 0.44) c h);
+		--sh-on-main: oklch(from var(--sh-main) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+		--sh-on-sub: oklch(from var(--sh-sub) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+	}
+}
+
+/* ---- Base：ブロックを全幅にし、中身を中央の最大幅に収める ---- */
+.bge-contents {
+	--sh-content: 1040px;
+	--sh-gap: max(20px, min(40px, 4vw));
+	--sh-inline: max(var(--sh-gap), calc((100% - var(--sh-content)) / 2));
+	--sh-sec: 120px;
+	/* 背景色オプションをテーマ色に置き換える */
+	--bge-options-bgcolor-blue: var(--sh-main-05);
+	--bge-options-bgcolor-gray: var(--sh-sub-05);
+	--bge-options-bgcolor-pink: var(--sh-sub);
+	--bge-options-margin-normal: 0;
+	--bge-options-margin-small: 0;
+	--bge-options-margin-large: 0;
+	--bge-options-padding-with-border-or-bg: 0;
+	color: var(--sh-text);
+	font-family: var(--sh-font);
+	font-size: 16px;
+	line-height: 1.9;
+	letter-spacing: .03em;
+}
+.bge-contents > [data-bgb] {
+	margin: 0;
+	padding: 0 var(--sh-inline) 40px;
+}
+.bge-contents > .bgb-opt--mb-large { padding-bottom: 80px; }
+.bge-contents > .bgb-opt--mb-small { padding-bottom: 20px; }
+.bge-contents > .bgb-opt--mb-none { padding-bottom: 0; }
+/* 背景色のブロックが続くときは1つのセクションに見せる。最後のブロックだけ下に余白を取る */
+.bge-contents > .bgb-opt--bg-blue:not(:has(+ .bgb-opt--bg-blue)),
+.bge-contents > .bgb-opt--bg-gray:not(:has(+ .bgb-opt--bg-gray)),
+.bge-contents > .bgb-opt--bg-pink:not(:has(+ .bgb-opt--bg-pink)) { padding-bottom: var(--sh-sec); }
+.bge-contents > .bgb-opt--bg-pink { color: var(--sh-on-sub); }
+.bge-contents > .bgb-opt--bg-pink a { color: inherit; }
+/* 背景色のないブロックで、次に背景色ブロックが来るときは余白を広げる */
+.bge-contents > [data-bgb]:not([class*="bgb-opt--bg-"]):has(+ [class*="bgb-opt--bg-"]) { padding-bottom: var(--sh-sec); }
+.bge-contents > :last-child { padding-bottom: var(--sh-sec); }
+
+/* 本文のタイポグラフィ */
+.bge-contents :is(h1, h2, h3, .bge-title-h2) { word-break: auto-phrase; }
+.bge-contents .bge-ckeditor > :first-child { margin-top: 0; }
+.bge-contents .bge-ckeditor > :last-child { margin-bottom: 0; }
+.bge-contents .bge-ckeditor :is(h2, h3, h4) { color: var(--sh-sub-ink); font-family: var(--sh-font-serif); font-weight: 700; line-height: 1.6; letter-spacing: .06em; }
+.bge-contents .bge-ckeditor a { color: var(--sh-link-ink); text-underline-offset: .24em; }
+.bge-contents .bge-ckeditor a:hover { color: var(--sh-hover-ink); }
+.bge-contents .bgb-opt--bg-pink .bge-ckeditor :is(h2, h3, h4) { color: inherit; }
+.bge-contents .bge-title-h2 {
+	margin: 0; padding: 0; border: 0; background: none;
+	color: var(--sh-sub-ink); font-family: var(--sh-font-serif); font-size: 36px; font-weight: 700; line-height: 1.5; letter-spacing: .1em;
+}
+.bge-contents .bge-title-h2::before { content: none; }
+.bge-contents .bgt-box__caption:empty { display: none; }
+/* BurgerEditor 標準の表の幅（見出し欄 25%・内容欄 75%）を打ち消す */
+.bge-contents .bge-type-table :is(th, td) { inline-size: auto; }
+/* BurgerEditor 標準のボタンブロック */
+.bge-contents .bgt-btn-container { text-align: center; }
+.bge-contents .bgt-btn,
+.bge-contents a.bgt-btn {
+	display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+	min-width: 240px; min-height: 60px; padding: 0 44px; border: 1px solid var(--sh-main); border-radius: 4px;
+	background: var(--sh-main); color: var(--sh-on-main); font-size: 16px; font-weight: 700; letter-spacing: .08em; text-decoration: none;
+}
+.bge-contents .bgt-btn:hover { border-color: var(--sh-main-dark); background: var(--sh-main-dark); color: var(--sh-on-main); }
+.bge-contents .bgt-btn::before,
+.bge-contents .bgt-btn::after { display: none; }
+
+/* ボタン（ヒーロー・CTA のリンクに当てる共通の見た目） */
+.sh-blk--hero .bge-ckeditor > p:last-child a,
+.sh-blk--cta .bge-ckeditor > p:nth-child(2) a {
+	display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+	min-width: 240px; min-height: 60px; padding: 0 44px; border: 1px solid var(--sh-main); border-radius: 4px;
+	background: var(--sh-main); color: var(--sh-on-main);
+	font-size: 16px; font-weight: 700; letter-spacing: .08em; line-height: 1.4; text-align: center; text-decoration: none;
+	transition: background-color .2s, color .2s, border-color .2s;
+}
+.sh-blk--hero .bge-ckeditor > p:last-child a:hover,
+.sh-blk--cta .bge-ckeditor > p:nth-child(2) a:hover { border-color: var(--sh-main-dark); background: var(--sh-main-dark); color: var(--sh-on-main); }
+/* 白いボタン：ヒーローの2つめのリンク */
+.sh-blk--hero .bge-ckeditor > p:last-child a:nth-of-type(2) { background: #fff; color: var(--sh-main-ink); }
+.sh-blk--hero .bge-ckeditor > p:last-child a:nth-of-type(2):hover { border-color: var(--sh-main); background: var(--sh-main-05); color: var(--sh-main-ink); }
+
+/* ---- 空の画像（すべての画像ブロック共通） ----
+   編集エリアでは、画像を選べるように点線の枠と案内を出す。公開画面では style.css でグレーの枠（仮の写真）にする。
+   「選択画像を削除する」で消した場合は data-bge-empty が "0" のまま img の src だけが空になるので、両方を空として扱う */
+.bge-contents .bgt-image:is([data-bge-empty="1"], :has(img[src=""])) {
+	position: relative; display: flex; align-items: center; justify-content: center; min-height: 160px; padding: 16px;
+	border: 2px dashed #8a8a8a; border-radius: 2px; background: rgba(255, 255, 255, .6); text-align: center;
+}
+.bge-contents .bgt-image:is([data-bge-empty="1"], :has(img[src=""]))::before { content: "画像（ダブルクリックで選択）"; color: #4d4d4d; font-size: 15px; font-weight: 700; }
+.bge-contents .bgt-image:has(img[src=""]) .bgt-image__link { display: none; }
+/* 写真の比率（すべての画像ブロック共通） */
+.bge-contents .bgt-image { margin: 0; }
+.bge-contents .bgt-image img { display: block; width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 2px; }
+
+/* ---- セクション見出し（sh-blk--section）：英字ラベル＋見出し＋右へ伸びる罫線 ---- */
+.bge-contents > .sh-blk--section { padding-top: var(--sh-sec); padding-bottom: 56px; }
+.bge-contents > [data-bgb]:not([class*="bgb-opt--bg-"]) + .sh-blk--section:not([class*="bgb-opt--bg-"]) { padding-top: 80px; }
+.bge-contents > .sh-blk--hero:not([class*="bgb-opt--bg-"]) + .sh-blk--section:not([class*="bgb-opt--bg-"]) { padding-top: var(--sh-sec); }
+.sh-blk--section .bgt-title-h2-container { display: flex; flex-direction: column; gap: 6px; }
+.sh-blk--section .bgt-title-h2-container[data-sh-label]::before {
+	content: attr(data-sh-label);
+	color: var(--sh-main-ink); font-family: var(--sh-font-serif); font-size: 14px; letter-spacing: .28em; line-height: 1.6;
+}
+.sh-blk--section .bge-title-h2 { display: flex; align-items: center; gap: 28px; }
+.sh-blk--section .bge-title-h2::after { content: ""; flex: 1 1 auto; height: 1px; background: var(--sh-line); }
+.sh-blk--section.sh-blk--center .bgt-title-h2-container { align-items: center; text-align: center; }
+.sh-blk--section.sh-blk--center .bge-title-h2::after { content: none; }
+.bge-contents > .sh-blk--section.bgb-opt--bg-pink .bge-title-h2,
+.bge-contents > .sh-blk--section.bgb-opt--bg-pink .bgt-title-h2-container::before { color: inherit; }
+
+/* ---- 共通：中央寄せ・幅を狭く ---- */
+.bge-contents > .sh-blk--center { text-align: center; }
+.sh-blk--narrow .bge-ckeditor { max-width: 720px; }
+.sh-blk--center.sh-blk--narrow .bge-ckeditor { margin: 0 auto; }
+
+/* ---- ヒーロー（sh-blk--hero） ---- */
+.bge-contents > .sh-blk--hero {
+	display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); gap: 72px; align-items: center;
+	padding-top: 72px; padding-bottom: var(--sh-sec);
+}
+.bge-contents > .sh-blk--hero > .bgt-grid { width: auto; max-width: none; float: none; margin: 0; padding: 0; }
+.sh-blk--hero .bge-ckeditor > * { margin: 0; }
+.sh-blk--hero .bge-ckeditor > p:first-child { color: var(--sh-main-ink); font-family: var(--sh-font-serif); font-size: 14px; letter-spacing: .32em; }
+.sh-blk--hero .bge-ckeditor h1 { margin-top: 4px; color: var(--sh-sub-ink); font-family: var(--sh-font-serif); font-size: 24px; font-weight: 700; letter-spacing: .2em; line-height: 1.6; }
+/* キャッチ */
+.sh-blk--hero .bge-ckeditor h1 + p { margin-top: 32px; color: var(--sh-sub-ink); font-family: var(--sh-font-serif); font-size: clamp(32px, 4vw, 50px); font-weight: 700; line-height: 1.5; letter-spacing: .06em; word-break: auto-phrase; }
+/* 紹介文 */
+.sh-blk--hero .bge-ckeditor h1 + p + p { margin-top: 24px; font-size: 17px; }
+/* 営業時間のひとこと */
+.sh-blk--hero .bge-ckeditor h1 + p + p + p:not(:last-child) {
+	display: flex; align-items: center; gap: 12px; margin-top: 32px; padding: 14px 0;
+	border-top: 1px solid var(--sh-line); border-bottom: 1px solid var(--sh-line); color: var(--sh-sub-ink); font-weight: 500;
+}
+.sh-blk--hero .bge-ckeditor h1 + p + p + p:not(:last-child)::before {
+	content: ""; flex: none; width: 20px; height: 20px; background: var(--sh-main-ink);
+	-webkit-mask: var(--sh-ic-clock) center / contain no-repeat; mask: var(--sh-ic-clock) center / contain no-repeat;
+}
+.sh-blk--hero .bge-ckeditor > p:last-child { display: flex; flex-wrap: wrap; gap: 16px; margin-top: 36px; }
+.sh-blk--hero .bgt-image img { aspect-ratio: 4 / 5; }
+.sh-blk--hero .bgt-image:is([data-bge-empty="1"], :has(img[src=""])) { aspect-ratio: 4 / 5; }
+
+/* ---- 3列のカード（こだわり sh-blk--points・メニュー sh-blk--menu） ---- */
+.bge-contents > :is(.sh-blk--points, .sh-blk--menu) { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 40px; counter-reset: sh-point; }
+:is(.sh-blk--points, .sh-blk--menu) > .bgt-grid { display: flex; flex-direction: column; width: auto; max-width: none; float: none; margin: 0; padding: 0; counter-increment: sh-point; }
+:is(.sh-blk--points, .sh-blk--menu) .bgt-image { margin-bottom: 22px; }
+:is(.sh-blk--points, .sh-blk--menu) > .bgt-grid > .bgt-ckeditor-container { flex: 1; display: flex; }
+:is(.sh-blk--points, .sh-blk--menu) .bge-ckeditor { flex: 1; display: flex; flex-direction: column; gap: 14px; }
+:is(.sh-blk--points, .sh-blk--menu) .bge-ckeditor > * { margin: 0; }
+:is(.sh-blk--points, .sh-blk--menu) .bge-ckeditor h3 { font-size: 21px; }
+.sh-blk--points .bge-ckeditor::before { content: "POINT " counter(sh-point, decimal-leading-zero); color: var(--sh-main-ink); font-family: var(--sh-font-serif); font-size: 14px; letter-spacing: .24em; }
+/* メニューの価格（最後の段落） */
+.sh-blk--menu .bge-ckeditor > p:last-child:not(:first-child) {
+	margin-top: auto; padding-top: 12px; border-top: 1px solid var(--sh-line);
+	color: var(--sh-sub-ink); font-family: var(--sh-font-serif); font-size: 21px; font-weight: 700;
+}
+.sh-blk--menu .bge-ckeditor > p:last-child small { margin-left: 2px; font-size: 16px; }
+
+/* ---- 価格表（sh-blk--side ＋ sh-blk--price） ---- */
+.bge-contents > .sh-blk--side { padding-top: 56px; }
+.sh-blk--side .bge-ckeditor > * { margin: 0; }
+.sh-blk--side .bge-ckeditor h3 { margin-bottom: 12px; font-size: 24px; letter-spacing: .08em; line-height: 1.5; }
+.bge-contents > .sh-blk--side + .sh-blk--price { padding-top: 56px; }
+.sh-blk--price .bge-type-table { width: 100%; border: 0; border-top: 1px solid var(--sh-sub-ink); border-collapse: collapse; }
+.sh-blk--price .bge-type-table caption { display: none; }
+.sh-blk--price .bge-type-table :is(th, td) { padding: 18px 8px; border: 0; border-bottom: 1px solid var(--sh-line); background: none; text-align: left; vertical-align: top; }
+.sh-blk--price .bge-type-table th { color: var(--sh-text); font-weight: 400; }
+.sh-blk--price .bge-type-table td { color: var(--sh-sub-ink); font-family: var(--sh-font-serif); font-size: 18px; font-weight: 700; text-align: right; white-space: nowrap; }
+
+/* ---- 店内の様子（sh-blk--gallery） ---- */
+.bge-contents > .sh-blk--gallery { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 40px; }
+.sh-blk--gallery > .bgt-grid { width: auto; max-width: none; float: none; margin: 0; padding: 0; }
+
+/* ---- お知らせ（sh-blk--news）：ショートコード [Lp.news] がブログの最新記事に置き換わる ----
+   一覧の見た目は style.css の「お知らせの一覧」。ここでは、編集エリア（置き換わる前）で場所がわかるように枠を出す */
+.sh-blk--news .bge-ckeditor:not(:has(.sh-news)) { padding: 24px; border: 1px dashed var(--sh-field, #8a8a8a); border-radius: 4px; background: #fff; color: var(--sh-muted); }
+.sh-blk--news .bge-ckeditor:not(:has(.sh-news))::after { content: "公開画面では、ここにブログ「お知らせ」の最新記事が並びます"; display: block; margin-top: 8px; font-size: 14px; }
+
+/* ---- 営業時間・アクセス（sh-blk--map ＋ sh-blk--info） ---- */
+.sh-blk--map .bgt-google-maps { height: 420px; border-radius: 2px; background: #e4e4e4; overflow: hidden; }
+.sh-blk--map .bgt-google-maps > img { width: 100%; height: 100%; object-fit: cover; color: transparent; /* API キーがなく読み込めないときに、代わりの文字を出さない */ }
+.sh-blk--map .bgt-google-maps-link { display: inline-flex; margin-top: 10px; color: var(--sh-link-ink); font-size: 15px; }
+.sh-blk--info .bge-type-table { width: 100%; border: 0; border-top: 1px solid var(--sh-sub-ink); border-collapse: collapse; }
+.sh-blk--info .bge-type-table caption { display: none; }
+.sh-blk--info .bge-type-table :is(th, td) { padding: 18px 8px; border: 0; border-bottom: 1px solid var(--sh-line); background: none; text-align: left; vertical-align: top; }
+.sh-blk--info .bge-type-table th { width: 8.5em; color: var(--sh-sub-ink); font-weight: 700; white-space: nowrap; }
+.sh-blk--info .bge-type-table td { color: var(--sh-text); }
+
+/* ---- よくある質問（sh-blk--faq）：すべて開いた状態で並べる ---- */
+.sh-blk--faq .bge-ckeditor { border-top: 1px solid var(--sh-sub-ink); }
+.sh-blk--faq .bge-ckeditor > * { margin: 0; }
+.sh-blk--faq .bge-ckeditor h3 { position: relative; padding: 32px 8px 0 calc(8px + 1.3em + 18px); font-family: var(--sh-font); font-size: 18px; letter-spacing: .03em; line-height: 1.7; }
+.sh-blk--faq .bge-ckeditor h3 + p { position: relative; padding: 12px 8px 32px calc(8px + 1.3em + 18px); border-bottom: 1px solid var(--sh-line); }
+.sh-blk--faq .bge-ckeditor h3::before,
+.sh-blk--faq .bge-ckeditor h3 + p::before {
+	content: "Q"; position: absolute; left: 8px; width: 1.3em;
+	color: var(--sh-main-ink); font-family: var(--sh-font-serif); font-size: 22px; font-weight: 700; line-height: 1.4;
+}
+.sh-blk--faq .bge-ckeditor h3::before { top: 32px; }
+.sh-blk--faq .bge-ckeditor h3 + p::before { content: "A"; top: 12px; color: var(--sh-sub-ink); }
+
+/* ---- 予約・お問い合わせ（sh-blk--cta）：リード → ボタンと電話の枠を横に並べる ---- */
+.bge-contents > .sh-blk--cta { text-align: center; }
+.sh-blk--cta .bge-ckeditor {
+	display: grid; grid-template-columns: auto auto; justify-content: center; column-gap: 24px;
+}
+.sh-blk--cta .bge-ckeditor > * { grid-column: 1 / -1; margin: 0; }
+.sh-blk--cta .bge-ckeditor > p:first-child { max-width: 640px; margin: 0 auto 48px; }
+/* 予約ボタン */
+.sh-blk--cta .bge-ckeditor > p:nth-child(2) { grid-column: 1; grid-row: 2 / span 3; display: flex; }
+.sh-blk--cta .bge-ckeditor > p:nth-child(2) a { min-width: 300px; min-height: 104px; font-size: 18px; }
+/* 電話の枠（見出し3〜最後の段落の後ろに、白い枠を敷く） */
+.sh-blk--cta .bge-ckeditor::before { content: ""; grid-column: 2; grid-row: 2 / span 3; border: 1px solid var(--sh-line); border-radius: 4px; background: #fff; }
+.sh-blk--cta .bge-ckeditor > h3,
+.sh-blk--cta .bge-ckeditor > h3 ~ p { grid-column: 2; min-width: 300px; padding: 0 32px; }
+/* 枠（::before）と同じマスに重ねるため、行を指定する（自動の配置だと枠を避けて下に押し出される） */
+.sh-blk--cta .bge-ckeditor > h3 { grid-row: 2; }
+.sh-blk--cta .bge-ckeditor > h3 + p { grid-row: 3; }
+.sh-blk--cta .bge-ckeditor > h3 + p + p { grid-row: 4; }
+.sh-blk--cta .bge-ckeditor > h3 { padding-top: 16px; color: var(--sh-muted); font-family: var(--sh-font); font-size: 15px; font-weight: 500; letter-spacing: .03em; }
+.sh-blk--cta .bge-ckeditor > h3 + p a {
+	display: inline-flex; align-items: center; gap: 10px;
+	color: var(--sh-sub-ink); font-family: var(--sh-font-serif); font-size: 30px; font-weight: 700; letter-spacing: .06em; line-height: 1.4; text-decoration: none;
+}
+.sh-blk--cta .bge-ckeditor > h3 + p a::before {
+	content: ""; width: 24px; height: 24px; background: var(--sh-main-ink);
+	-webkit-mask: var(--sh-ic-phone) center / contain no-repeat; mask: var(--sh-ic-phone) center / contain no-repeat;
+}
+.sh-blk--cta .bge-ckeditor > h3 + p a:hover { color: var(--sh-hover-ink); }
+.sh-blk--cta .bge-ckeditor > h3 + p + p { padding-bottom: 16px; color: var(--sh-muted); font-size: 15px; }
+
+/* ---- レスポンシブ ---- */
+@media (max-width: 767px) {
+	.bge-contents { --sh-sec: 72px; }
+	.bge-contents .bge-title-h2 { font-size: 27px; }
+	.sh-blk--section .bge-title-h2 { gap: 16px; }
+	.bge-contents > .sh-blk--section { padding-bottom: 36px; }
+	.bge-contents > [data-bgb]:not([class*="bgb-opt--bg-"]) + .sh-blk--section:not([class*="bgb-opt--bg-"]) { padding-top: 56px; }
+	.bge-contents > .sh-blk--hero { grid-template-columns: minmax(0, 1fr); gap: 32px; padding-top: 24px; }
+	.sh-blk--hero > .bgt-grid--last { order: -1; }
+	.sh-blk--hero .bgt-image img,
+	.sh-blk--hero .bgt-image:is([data-bge-empty="1"], :has(img[src=""])) { aspect-ratio: 4 / 3; }
+	.sh-blk--hero .bge-ckeditor h1 + p { margin-top: 20px; }
+	.sh-blk--hero .bge-ckeditor > p:last-child a { flex: 1 1 100%; }
+	.bge-contents > :is(.sh-blk--points, .sh-blk--menu) { grid-template-columns: minmax(0, 1fr); gap: 48px; }
+	.bge-contents > .sh-blk--gallery { grid-template-columns: minmax(0, 1fr); gap: 20px; }
+	.bge-contents > .sh-blk--side { padding-top: 40px; padding-bottom: 20px; }
+	.bge-contents > .sh-blk--side + .sh-blk--price { padding-top: 0; }
+	.sh-blk--price .bge-type-table :is(th, td),
+	.sh-blk--info .bge-type-table :is(th, td) { padding: 14px 4px; }
+	.sh-blk--news .bge-type-table tr { grid-template-columns: minmax(0, 1fr); gap: 6px; padding: 24px 4px; }
+	.sh-blk--map .bgt-google-maps { height: auto; aspect-ratio: 4 / 3; }
+	.sh-blk--info .bge-type-table th { width: 6.5em; white-space: normal; }
+	.sh-blk--faq .bge-ckeditor h3 { padding: 24px 4px 0 calc(4px + 1.3em + 12px); font-size: 17px; }
+	.sh-blk--faq .bge-ckeditor h3 + p { padding: 12px 4px 24px calc(4px + 1.3em + 12px); }
+	.sh-blk--faq .bge-ckeditor h3::before,
+	.sh-blk--faq .bge-ckeditor h3 + p::before { left: 4px; }
+	.sh-blk--faq .bge-ckeditor h3::before { top: 24px; }
+	.sh-blk--cta .bge-ckeditor { grid-template-columns: minmax(0, 1fr); row-gap: 0; }
+	.sh-blk--cta .bge-ckeditor > p:nth-child(2) { grid-column: 1; grid-row: 2; margin-bottom: 24px; }
+	.sh-blk--cta .bge-ckeditor > p:nth-child(2) a { width: 100%; min-width: 0; min-height: 72px; }
+	.sh-blk--cta .bge-ckeditor::before { grid-column: 1; grid-row: 3 / span 3; }
+	.sh-blk--cta .bge-ckeditor > h3,
+	.sh-blk--cta .bge-ckeditor > h3 ~ p { grid-column: 1; min-width: 0; }
+	.sh-blk--cta .bge-ckeditor > h3 { grid-row: 3; }
+	.sh-blk--cta .bge-ckeditor > h3 + p { grid-row: 4; }
+	.sh-blk--cta .bge-ckeditor > h3 + p + p { grid-row: 5; }
+	.sh-blk--cta .bge-ckeditor > h3 + p a { font-size: 26px; }
+}
+
+/* ---- 動き（CSS のみ・控えめ。公開画面だけ） ---- */
+@keyframes sh-rise { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
+@supports (animation-timeline: view()) {
+	@media (prefers-reduced-motion: no-preference) {
+		.sh-body .bge-contents > [data-bgb]:not(.sh-blk--hero) { animation: sh-rise linear both; animation-timeline: view(); animation-range: entry 0% entry 40%; }
+	}
+}
+@media (prefers-reduced-motion: reduce) {
+	.bge-contents *, .bge-contents *::before, .bge-contents *::after { transition: none !important; animation: none !important; }
+}

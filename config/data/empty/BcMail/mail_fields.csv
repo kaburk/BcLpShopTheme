@@ -1,0 +1,13 @@
+﻿id,mail_content_id,no,name,field_name,type,head,attention,before_attachment,after_attachment,source,size,rows,maxlength,options,class,delimiter,default_value,description,group_field,group_valid,valid,valid_ex,auto_convert,not_empty,use_field,no_send,sort,created,modified
+1,1,1,姓,name_1,text,お名前,,,,,,,255,placeholder|山田,form-s,,,,name,name,1,,,1,1,,1,,
+2,1,2,名,name_2,text,お名前,,,,,,,255,placeholder|花子,form-s,,,,name,name,1,,,1,1,,2,,
+3,1,3,セイ,kana_1,text,フリガナ,,,,,,,255,placeholder|ヤマダ,form-s,,,,kana,kana,1,,,1,1,,3,,
+4,1,4,メイ,kana_2,text,フリガナ,,,,,,,255,placeholder|ハナコ,form-s,,,,kana,kana,1,,,1,1,,4,,
+5,1,5,メールアドレス,email,email,メールアドレス,,,,,,,255,placeholder|sample@example.com,,,,,,,1,VALID_EMAIL,,1,1,,5,,
+6,1,6,電話番号,tel,tel,電話番号,,,,,,,20,placeholder|090-0000-0000,sh-w-md,,,,,,1,,,1,1,,6,,
+7,1,7,ご用件,purpose,radio,ご用件,,,,来店の予約|お問い合わせ,,,,,,,来店の予約,,,,1,,,1,1,,7,,
+8,1,8,ご希望の日付,date,date_time_calender,ご希望の日付,ご来店の予約の場合はご記入ください。火曜日は定休日です。,,,,,,,,sh-w-md,,,,,,,,,,1,,8,,
+9,1,9,ご希望の時間,time,select,ご希望の時間,ご来店の予約の場合はご記入ください。,,,8:00|9:00|10:00|11:00|12:00|13:00|14:00|15:00|16:00|17:00,,,,empty|選択してください,,,,,,,,,,,1,,9,,
+10,1,10,人数,people,select,人数,ご来店の予約の場合はご記入ください。,,,1名|2名|3名|4名|5名|6名|7名以上,,,,empty|選択してください,,,,,,,,,,,1,,10,,
+11,1,11,メッセージ,message,textarea,メッセージ,,,,,,6,1000,placeholder|ご要望やご質問があればご記入ください。,,,,,,,,,,,1,,11,,
+12,1,12,個人情報の取り扱い,agree,multi_check,個人情報の取り扱い,,,,個人情報の取り扱いに同意する,,,,,,,,ご入力いただいた個人情報は、ご予約・お問い合わせへのご連絡にのみ使用し、ご本人の同意なく第三者に提供することはありません。,,,1,VALID_NOT_UNCHECKED,,1,1,1,12,,
