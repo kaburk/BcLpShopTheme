@@ -179,4 +179,64 @@ class LpHelper extends Helper
         }
     }
 
+    /**
+     * サブフォルダに設置したサイト（例：https://example.com/hoge/）で、ページの HTML の中の
+     * ルートからのパス（/contact/・/<テーマ>/img/… など）に、設置したフォルダ（/hoge）を足す
+     *
+     * - 初期データの本文は、ルートに置いたときのパスで書いているため、サブフォルダではリンクが切れる
+     * - ルートに置いたサイト（base が空）では何もしない（出力は変わらない）
+     * - View.afterLayout で呼ばれる（Helper::implementedEvents()）
+     *
+     * @param \Cake\Event\EventInterface $event
+     * @param string $layoutFile
+     * @return void
+     */
+    public function afterLayout(\Cake\Event\EventInterface $event, $layoutFile): void
+    {
+        $base = rtrim((string)$this->getView()->getRequest()->getAttribute('base'), '/');
+        if ($base === '') {
+            return;
+        }
+        $view = $this->getView();
+        $view->assign('content', self::addBase($view->fetch('content'), $base));
+    }
+
+    /**
+     * HTML の href・src・action・poster・srcset のうち、ルートからのパスに $base を足す
+     * - //（プロトコル相対）で始まるもの、すでに $base/ で始まるものはそのまま
+     *
+     * @param string $html
+     * @param string $base 設置したフォルダ（例：/hoge）
+     * @return string
+     */
+    public static function addBase(string $html, string $base): string
+    {
+        $base = rtrim($base, '/');
+        if ($base === '') {
+            return $html;
+        }
+        $fix = function (string $url) use ($base): string {
+            if (!str_starts_with($url, '/') || str_starts_with($url, '//') || $url === $base || str_starts_with($url, $base . '/')) {
+                return $url;
+            }
+            return $base . $url;
+        };
+        $html = preg_replace_callback(
+            '/(?<![\w-])(href|src|action|poster)=(["\'])(\/[^"\']*)\2/i',
+            fn(array $m): string => $m[1] . '=' . $m[2] . $fix($m[3]) . $m[2],
+            $html
+        ) ?? $html;
+        return preg_replace_callback(
+            '/(?<![\w-])srcset=(["\'])([^"\']*)\1/i',
+            function (array $m) use ($fix): string {
+                $items = array_map(function (string $item) use ($fix): string {
+                    $parts = preg_split('/\s+/', trim($item), 2);
+                    return trim($fix($parts[0]) . ' ' . ($parts[1] ?? ''));
+                }, explode(',', $m[2]));
+                return 'srcset=' . $m[1] . implode(', ', $items) . $m[1];
+            },
+            $html
+        ) ?? $html;
+    }
+
 }
